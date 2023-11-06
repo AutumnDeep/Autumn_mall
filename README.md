@@ -50,7 +50,8 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect 
 ```
-여기 중, 'url: jdbc:mysql://127.0.0.1:3307/exampledb?useUnicode=true&serverTimezone=Asia/Seoul` 여기에서 해당하는 db, 포트번호로 바꿉니다
+여기 중, 'url: jdbc:mysql://127.0.0.1:3307/exampledb?useUnicode=true&serverTimezone=Asia/Seoul` 여기에서 해당하는 db, 포트번호로 바꿉니다.
+
 ex) 워크벤치 기준 스키마가 'examplesdb', docker 기준 port번호가 3308이면 'url: jdbc:mysql://127.0.0.1:3308/examplesdb?useUnicode=true&serverTimezone=Asia/Seoul`
 
 
