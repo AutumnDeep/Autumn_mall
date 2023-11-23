@@ -10,7 +10,7 @@ services:
   vacation-db:
     image: mysql
     restart: always
-    environment:
+    environment: // enviroment에서 TZ부분 말고 본인 환경에 맞춰 수정
       MYSQL_ROOT_PASSWORD: "root1234"
       MYSQL_DATABASE: "exampledb"
       MYSQL_USER: "urstory"
@@ -24,7 +24,7 @@ services:
       - ./database/datadir/:/var/lib/mysql
     platform: linux/x86_64
     ports:
-      - 3307:3307
+      - 3307:3307 // port번호 확인
 
 ```
 
