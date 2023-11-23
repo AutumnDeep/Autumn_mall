@@ -13,6 +13,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import Link from "next/link"; // 추가된 코드
 import myAxios from "../utils/myaxios";
+import Carts from "./Carts";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -100,11 +101,7 @@ const ProductList = ({
                     {product.price}원
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button variant="contained" color="primary" fullWidth>
-                    장바구니 담기
-                  </Button>
-                </CardActions>
+                <Carts />
               </Card>
             </Grid>
           ))

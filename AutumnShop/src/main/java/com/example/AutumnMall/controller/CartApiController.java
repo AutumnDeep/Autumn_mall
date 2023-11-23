@@ -1,6 +1,7 @@
 package com.example.AutumnMall.controller;
 
 import com.example.AutumnMall.domain.Cart;
+import com.example.AutumnMall.dto.AddCartDto;
 import com.example.AutumnMall.security.jwt.util.IfLogin;
 import com.example.AutumnMall.security.jwt.util.LoginUserDto;
 import com.example.AutumnMall.service.CartService;
@@ -15,15 +16,13 @@ import java.time.LocalDate;
 public class CartApiController {
     private final CartService cartService;
     @PostMapping
-    public Cart addCart(@IfLogin LoginUserDto loginUserDto) {
+    public Cart addCart(@IfLogin @RequestBody AddCartDto addCartDto) {
         LocalDate localDate = LocalDate.now();
         localDate.getYear();
         localDate.getDayOfMonth();
         localDate.getMonthValue();
         String date = String.valueOf(localDate.getYear()) + (localDate.getMonthValue() < 10 ? "0" :"") + String.valueOf(localDate.getMonthValue()) + (localDate.getDayOfMonth() < 10 ? "0" :"") +String.valueOf(localDate.getDayOfMonth());
-        Cart cart = cartService.addCart(loginUserDto.getMemberId(), date);
+        Cart cart = cartService.addCart(addCartDto.getMemberId(), date);
         return cart;
     }
-
-
 }
