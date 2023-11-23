@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const Carts = () => {
+const Carts = ({ title, price, id, description }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -21,9 +21,30 @@ const Carts = () => {
       const response = await axios.post("http://localhost:8080/carts", {
         memberId: loginInfo.memberId,
       });
+
+      console.log(response.data.id, id, title, price, description);
+      console.log(id, title, price, description);
+      console.log(description);
+      const itemsResponse = await axios.post(
+        "http://localhost:8080/cartItems",
+        {
+          cartId: response.data.id,
+          productId: id,
+          productTitle: title,
+          productPrice: price,
+          productDescription: description,
+          quantity: 1,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${loginInfo.accessToken}`,
+          },
+        }
+      );
+
       console.log("물품 등록 Okay : ", loginInfo.memberId);
     } catch (error) {
-      console.error("로그인을 해야합니다.", error);
+      //   console.error("로그인을 해야합니다.", error);
     }
   };
 

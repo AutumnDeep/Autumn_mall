@@ -101,7 +101,12 @@ const ProductList = ({
                     {product.price}원
                   </Typography>
                 </CardContent>
-                <Carts />
+                <Carts
+                  title={product.title}
+                  price={product.price}
+                  id={product.id}
+                  description={product.description}
+                />
               </Card>
             </Grid>
           ))
