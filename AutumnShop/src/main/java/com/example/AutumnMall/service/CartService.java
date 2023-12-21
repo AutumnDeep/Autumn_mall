@@ -23,4 +23,7 @@ public class CartService {
             return cart.get();
         }
     }
+    public Optional<Cart> findByMemberId(Long memberId) {
+        return cartRepository.findByMemberId(memberId);
+    }
 }
