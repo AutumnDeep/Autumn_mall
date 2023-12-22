@@ -12,7 +12,7 @@ import java.util.Optional;
 public class CartService {
     private final CartRepository cartRepository;
     public Cart addCart(Long memberId, String date) {
-        Optional<Cart> cart = cartRepository.findByMemberIdAndDate(memberId, date);
+        Optional<Cart> cart = cartRepository.findByMemberId(memberId);
         if(cart.isEmpty()) {
             Cart newCart = new Cart();
             newCart.setMemberId(memberId);
@@ -22,5 +22,8 @@ public class CartService {
         } else {
             return cart.get();
         }
+    }
+    public Optional<Cart> findByMemberId(Long memberId) {
+        return cartRepository.findByMemberId(memberId);
     }
 }

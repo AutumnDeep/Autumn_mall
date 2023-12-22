@@ -1,5 +1,6 @@
 package com.example.AutumnMall.service;
 
+import com.example.AutumnMall.dto.AddCartDto;
 import com.example.AutumnMall.repository.CartItemRepository;
 import com.example.AutumnMall.repository.CartRepository;
 import com.example.AutumnMall.domain.Cart;
@@ -61,7 +62,7 @@ public class CartItemService {
 
     @Transactional(readOnly = true)
     public List<CartItem> getCartItems(Long memberId, Long cartId) {
-        return cartItemRepository.findByCart_memberIdAndCart_id(memberId, cartId);
+        return cartItemRepository.findByCart_IdAndCart_MemberId(cartId, memberId);
     }
 
     @Transactional(readOnly = true)
