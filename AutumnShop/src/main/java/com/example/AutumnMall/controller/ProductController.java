@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -32,5 +34,10 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product getProducts(@PathVariable Long id) {
         return productService.getProduct(id);
+    }
+
+    @GetMapping("/image/{id}")
+    public Optional<Product> getImageUrl(@PathVariable Long id){
+        return productService.getImageUrl(id);
     }
 }

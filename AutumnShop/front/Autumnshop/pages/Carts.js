@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  Container,
-  Grid,
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  CardActions,
-  Button,
-  Box,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import { CardActions, Button } from "@mui/material";
 import axios from "axios";
 
 const Carts = ({ title, price, id, description }) => {
@@ -22,9 +11,6 @@ const Carts = ({ title, price, id, description }) => {
         memberId: loginInfo.memberId,
       });
 
-      console.log(response.data.id, id, title, price, description);
-      console.log(id, title, price, description);
-      console.log(description);
       const itemsResponse = await axios.post(
         "http://localhost:8080/cartItems",
         {
@@ -41,10 +27,8 @@ const Carts = ({ title, price, id, description }) => {
           },
         }
       );
-
-      console.log("물품 등록 Okay : ", loginInfo.memberId);
     } catch (error) {
-      //   console.error("로그인을 해야합니다.", error);
+      console.error("로그인을 해야합니다.", error);
     }
   };
 

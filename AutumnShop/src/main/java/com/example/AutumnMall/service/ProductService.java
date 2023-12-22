@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -47,5 +49,10 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Product getProduct(Long id) {
         return productRepository.findById(id).orElseThrow();
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Product> getImageUrl(Long id){
+        return productRepository.findImageUrlById(id);
     }
 }

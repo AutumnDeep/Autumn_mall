@@ -57,7 +57,12 @@ const DesktopAppBar = () => {
           <Button color="inherit">상품목록</Button>
         </Link>
         <Link href="/cartItems" passHref>
-          <Button color="inherit">카트목록</Button>
+          <Button
+            color="inherit"
+            style={{ display: isLoggedIn ? "block" : "none" }}
+          >
+            카트목록
+          </Button>
         </Link>
         <Link href="/mypage" passHref>
           <Button
