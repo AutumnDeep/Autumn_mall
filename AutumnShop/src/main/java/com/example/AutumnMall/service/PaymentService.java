@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,14 +36,16 @@ public class PaymentService {
         while(iterator.hasNext()){
             CartItem cartItem = iterator.next();
 
-            Product product = productRepository.findByProductId(cartItem.getProductId());
+            Optional<Product> product = productRepository.findById(cartItem.getProductId());
+            Product productItem = product.get();
+
 
             Payment userPayment = new Payment();
-            userPayment.setImageUrl(product.getImageUrl());
+            userPayment.setImageUrl(productItem.getImageUrl());
             userPayment.setProductId(cartItem.getProductId());
             userPayment.setProductPrice(cartItem.getProductPrice());
             userPayment.setProductTitle(cartItem.getProductTitle());
-            userPayment.setProductRate(product.getRating().getRate());
+            userPayment.setProductRate(productItem.getRating().getRate());
             userPayment.setQuantity(cartItem.getQuantity());
             userPayment.setMemberId(memberId);
             userPayment.setDate(date);
