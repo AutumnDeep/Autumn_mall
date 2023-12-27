@@ -15,9 +15,10 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/Payment")
+@RequestMapping("/payment")
 public class PaymentController {
     private final PaymentService paymentService;
+
 
     @PostMapping
     public List<Payment> payment(@IfLogin LoginUserDto loginUserDto,

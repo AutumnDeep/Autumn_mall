@@ -25,7 +25,6 @@ public class Payment {
     private Long memberId;
     private String date;
 
-    private Long cartId;
 
 
 }

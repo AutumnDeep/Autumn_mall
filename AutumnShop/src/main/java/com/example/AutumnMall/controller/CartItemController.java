@@ -35,18 +35,18 @@ public class CartItemController {
         }
     }
 
-    @DeleteMapping("/{cartItemId}")
-    public ResponseEntity deleteCartItem(@IfLogin LoginUserDto loginUserDto, @PathVariable Long cartItemId){
-        if(cartItemService.isCartItemExist(loginUserDto.getMemberId(), cartItemId) == false)
-            return ResponseEntity.badRequest().build();
-        cartItemService.deleteCartItem(loginUserDto.getMemberId(), cartItemId);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping
     public List<CartItem> getCartItems(@IfLogin LoginUserDto loginUserDto, @RequestParam(required = false) Long cartId) {
         if(cartId == null)
             return cartItemService.getCartItems(loginUserDto.getMemberId());
         return cartItemService.getCartItems(loginUserDto.getMemberId(), cartId);
     }
+
+    //    @DeleteMapping("/{cartItemId}")
+//    public ResponseEntity deleteCartItem(@IfLogin LoginUserDto loginUserDto, @PathVariable Long cartItemId){
+//        if(cartItemService.isCartItemExist(loginUserDto.getMemberId(), cartItemId) == false)
+//            return ResponseEntity.badRequest().build();
+//        cartItemService.deleteCartItem(loginUserDto.getMemberId(), cartItemId);
+//        return ResponseEntity.ok().build();
+//    }
 }

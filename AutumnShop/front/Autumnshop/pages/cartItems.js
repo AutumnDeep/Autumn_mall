@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
+import Payment from "./Payment";
 
 // CSS 모음
 const useStyles = makeStyles((theme) => ({
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // DB 접근 함수
-async function getCartItem(loginInfo, setCartItem) {
+async function getCartItem(loginInfo, setCartItem, setCartMemberId) {
   let cartId = 0;
 
   // 1. 현재 로그인한 아이디에 따라 맞는 카트 가져옴
@@ -51,6 +52,7 @@ async function getCartItem(loginInfo, setCartItem) {
     })
     .then((cartIdresponse) => {
       cartId = cartIdresponse.id;
+      setCartMemberId(cartIdresponse.data.id);
     });
 
   // 2. 카트 Id에 맞는 카트 아이템 목록들을 가져옴
@@ -80,11 +82,18 @@ const CartItems = () => {
   const classes = useStyles();
   const [cartItems, setCartItems] = useState([]);
   const [images, setImages] = useState([]);
+  const [cartMemberId, setCartMemberId] = useState();
+  let totalPrice = 0;
 
   useEffect(() => {
     const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
-    getCartItem(loginInfo, setCartItems);
+    getCartItem(loginInfo, setCartItems, setCartMemberId);
   }, []);
+
+  // 카트에 저장된 아이템들의 총 가격
+  cartItems.forEach((item) => {
+    totalPrice += item.productPrice;
+  });
 
   //cartItem 불러오고 난 후 이미지Url을 순서대로 불러오게 하기 위함
   useEffect(() => {
@@ -128,8 +137,12 @@ const CartItems = () => {
               </td>
             </tr>
           ))}
+          <tr>
+            <td>총 가격 : {totalPrice}</td>
+          </tr>
         </tbody>
       </table>
+      <Payment cartId={cartMemberId} />
     </div>
   );
 };

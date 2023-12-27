@@ -50,7 +50,9 @@ public class PaymentService {
             userPayment.setMemberId(memberId);
             userPayment.setDate(date);
 
+
             payments.add(paymentRepository.save(userPayment));
+            cartItemRepository.deleteByCart_memberId(memberId);
         }
 
         return payments;
