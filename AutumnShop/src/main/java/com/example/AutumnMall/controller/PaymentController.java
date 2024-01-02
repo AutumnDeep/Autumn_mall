@@ -6,10 +6,7 @@ import com.example.AutumnMall.security.jwt.util.IfLogin;
 import com.example.AutumnMall.security.jwt.util.LoginUserDto;
 import com.example.AutumnMall.service.PaymentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +28,11 @@ public class PaymentController {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    @GetMapping("/{id}")
+    public List<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
+                                        @PathVariable Long id){
+            return paymentService.getPayment(loginUserDto.getMemberId());
     }
 }

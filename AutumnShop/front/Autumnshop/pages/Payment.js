@@ -17,14 +17,23 @@ const Payment = ({ cartId }) => {
           },
         }
       );
+      if (paymentResponse.status == 200) {
+        window.alert("구매가 완료되었습니다!");
+        window.location.href = "http://localhost:3000/paymentList";
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
+  const paymentSubmitClick = () => {
+    const confirm = window.confirm("결제를 하시겠습니까?");
+    if (confirm) paymentSubmit();
+  };
+
   return (
     <div>
-      <button type="submit" onClick={paymentSubmit}>
+      <button type="submit" onClick={paymentSubmitClick}>
         구매
       </button>
     </div>

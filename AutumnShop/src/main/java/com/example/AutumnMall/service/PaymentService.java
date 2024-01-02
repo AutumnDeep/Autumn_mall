@@ -58,4 +58,9 @@ public class PaymentService {
         return payments;
     }
 
+    @Transactional
+    public List<Payment> getPayment(Long memberId){
+        return paymentRepository.findByMemberId(memberId);
+    }
+
 }
