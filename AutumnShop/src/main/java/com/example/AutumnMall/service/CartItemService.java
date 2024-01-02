@@ -55,11 +55,6 @@ public class CartItemService {
         return cartItemRepository.existsByCart_memberIdAndId(memberId, cartItemId);
     }
 
-    @Transactional
-    public void deleteCartItem(Long memberId, Long cartItemId) {
-        cartItemRepository.deleteByCart_memberIdAndId(memberId, cartItemId);
-    }
-
     @Transactional(readOnly = true)
     public List<CartItem> getCartItems(Long memberId, Long cartId) {
         return cartItemRepository.findByCart_IdAndCart_MemberId(cartId, memberId);
@@ -69,4 +64,9 @@ public class CartItemService {
     public List<CartItem> getCartItems(Long memberId) {
         return cartItemRepository.findByCart_memberId(memberId);
     }
+
+    //    @Transactional
+//    public void deleteCartItem(Long memberId, Long cartItemId) {
+//        cartItemRepository.deleteByCart_memberIdAndId(memberId, cartItemId);
+//    }
 }

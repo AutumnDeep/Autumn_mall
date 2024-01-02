@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
 import Payment from "./Payment";
+import { ImportExport } from "@mui/icons-material";
 
 // CSS 모음
 const useStyles = makeStyles((theme) => ({
@@ -40,69 +41,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // DB 접근 함수
-async function getCartItem(loginInfo, setCartItem, setCartMemberId) {
-  let cartId = 0;
-
+async function getCartItem(loginInfo, setPaymentItems) {
   // 1. 현재 로그인한 아이디에 따라 맞는 카트 가져옴
-  const cartIdresponse = await axios
-    .get(`http://localhost:8080/carts/${loginInfo.memberId}`, {
+  const paymentResponse = await axios
+    .get(`http://localhost:8080/payment/${loginInfo.memberId}`, {
       headers: {
         Authorization: `Bearer ${loginInfo.accessToken}`,
       },
     })
-    .then((cartIdresponse) => {
-      cartId = cartIdresponse.id;
-      setCartMemberId(cartIdresponse.data.id);
+    .then((paymentResponse) => {
+      setPaymentItems(paymentResponse.data);
     });
-
-  // 2. 카트 Id에 맞는 카트 아이템 목록들을 가져옴
-  const cartItemsResponse = await axios.get("http://localhost:8080/cartItems", {
-    params: { cartId: cartId },
-    headers: {
-      Authorization: `Bearer ${loginInfo.accessToken}`,
-    },
-  });
-
-  setCartItem(cartItemsResponse.data);
 }
 
-// imageUrl 불러오는 함수
-async function getImageUrl(productId, setImages, index) {
-  const cartImageResponse = await axios.get(
-    `http://localhost:8080/products/image/${productId}`
-  );
-  setImages((prevImages) => {
-    const updatedImages = [...prevImages];
-    updatedImages[index] = cartImageResponse.data.imageUrl;
-    return updatedImages;
-  });
-}
-
-const CartItems = () => {
+const paymentList = () => {
   const classes = useStyles();
-  const [cartItems, setCartItems] = useState([]);
-  const [images, setImages] = useState([]);
-  const [cartMemberId, setCartMemberId] = useState();
+  const [paymentItems, setPaymentItems] = useState([]);
   let totalPrice = 0;
 
   useEffect(() => {
     const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
-    getCartItem(loginInfo, setCartItems, setCartMemberId);
+    getCartItem(loginInfo, setPaymentItems);
   }, []);
 
   // 카트에 저장된 아이템들의 총 가격
-  cartItems.forEach((item) => {
+  paymentItems.forEach((item) => {
     totalPrice += item.productPrice;
   });
-
-  //cartItem 불러오고 난 후 이미지Url을 순서대로 불러오게 하기 위함
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      cartItems.forEach((item, index) => {
-        getImageUrl(item.productId, setImages, index);
-      });
-    }
-  }, [cartItems]);
 
   return (
     <div className={classes.cartContainer}>
@@ -113,28 +78,30 @@ const CartItems = () => {
             <th>번호</th>
             <th>상품 이름</th>
             <th>상품 가격</th>
-            <th>상품 설명</th>
+            <th>평점</th>
             <th>수량</th>
             <th>이미지</th>
+            <th>구매날짜</th>
           </tr>
         </thead>
         <tbody className="css">
-          {cartItems.map((item, index) => (
+          {paymentItems.map((item, index) => (
             <tr key={item.id} className={classes.cartItem}>
               <td>{index + 1}</td>
               <td>{item.productTitle}</td>
               <td>{item.productPrice}</td>
-              <td>{item.productDescription}</td>
+              <td>{item.productRate}</td>
               <td>{item.quantity}</td>
               <td>
-                {images[index] && (
+                {item.imageUrl && (
                   <img
-                    src={images[index]}
+                    src={item.imageUrl}
                     alt={`Product ${index + 1}`}
                     className={classes.productImage}
                   />
                 )}
               </td>
+              <td>{item.date}</td>
             </tr>
           ))}
           <tr>
@@ -142,9 +109,8 @@ const CartItems = () => {
           </tr>
         </tbody>
       </table>
-      <Payment cartId={cartMemberId} />
     </div>
   );
 };
 
-export default CartItems;
+export default paymentList;
