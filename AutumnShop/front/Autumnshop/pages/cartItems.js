@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100px",
     alignSelf: "center",
   },
+  quantityInput: {
+    width: "50px",
+  },
 }));
 
 // DB 접근 함수
@@ -83,6 +86,7 @@ const CartItems = () => {
   const [cartItems, setCartItems] = useState([]);
   const [images, setImages] = useState([]);
   const [cartMemberId, setCartMemberId] = useState();
+  const [updatedQuantity, setUpdatedQuantity] = useState([]);
   let totalPrice = 0;
 
   useEffect(() => {
@@ -100,49 +104,84 @@ const CartItems = () => {
     if (cartItems.length > 0) {
       cartItems.forEach((item, index) => {
         getImageUrl(item.productId, setImages, index);
+        setUpdatedQuantity((prevQuantitiy) => {
+          const Quantity = [...prevQuantitiy];
+          Quantity[index] = cartItems[index].quantity || 0;
+          return Quantity;
+        });
       });
     }
   }, [cartItems]);
 
+  const QuantityChange = (event, index) => {
+    const newQuantity = [...updatedQuantity];
+    newQuantity[index] = parseInt(event.target.value);
+    setUpdatedQuantity(newQuantity);
+    console.log(newQuantity);
+  };
+
   return (
-    <div className={classes.cartContainer}>
-      <h1>장바구니 목록</h1>
-      <table className={classes.cartTable}>
-        <thead>
-          <tr>
-            <th>번호</th>
-            <th>상품 이름</th>
-            <th>상품 가격</th>
-            <th>상품 설명</th>
-            <th>수량</th>
-            <th>이미지</th>
-          </tr>
-        </thead>
-        <tbody className="css">
-          {cartItems.map((item, index) => (
-            <tr key={item.id} className={classes.cartItem}>
-              <td>{index + 1}</td>
-              <td>{item.productTitle}</td>
-              <td>{item.productPrice}</td>
-              <td>{item.productDescription}</td>
-              <td>{item.quantity}</td>
-              <td>
-                {images[index] && (
-                  <img
-                    src={images[index]}
-                    alt={`Product ${index + 1}`}
-                    className={classes.productImage}
-                  />
-                )}
-              </td>
+    <div>
+      <div className={classes.cartContainer}>
+        <h1>장바구니 목록</h1>
+        <table className={classes.cartTable}>
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>상품 이름</th>
+              <th>상품 가격</th>
+              <th>상품 설명</th>
+              <th>수량</th>
+              <th>이미지</th>
             </tr>
-          ))}
-          <tr>
-            <td>총 가격 : {totalPrice}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Payment cartId={cartMemberId} />
+          </thead>
+          <tbody className="css">
+            {cartItems.map((item, index) => (
+              <tr key={item.id} className={classes.cartItem}>
+                <td>{index + 1}</td>
+                <td>{item.productTitle}</td>
+                <td>{item.productPrice}</td>
+                <td>{item.productDescription}</td>
+                {/* <td>
+                  <input
+                    type="number"
+                    className={classes.quantityInput}
+                    value={updatedQuantity[index] || 0}
+                    onChange={(event) => QuantityChange(event, index)}
+                  />
+                </td> */}
+                <td>
+                  <select
+                    className={classes.quantityInput}
+                    value={updatedQuantity[index] || 0}
+                    onChange={(event) => QuantityChange(event, index)}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+
+                <td>
+                  {images[index] && (
+                    <img
+                      src={images[index]}
+                      alt={`Product ${index + 1}`}
+                      className={classes.productImage}
+                    />
+                  )}
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <td>총 가격 : {totalPrice}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <Payment cartId={cartMemberId} quantity={updatedQuantity} />
     </div>
   );
 };

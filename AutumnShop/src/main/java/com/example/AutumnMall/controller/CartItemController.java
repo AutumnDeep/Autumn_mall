@@ -42,11 +42,11 @@ public class CartItemController {
         return cartItemService.getCartItems(loginUserDto.getMemberId(), cartId);
     }
 
-    //    @DeleteMapping("/{cartItemId}")
-//    public ResponseEntity deleteCartItem(@IfLogin LoginUserDto loginUserDto, @PathVariable Long cartItemId){
-//        if(cartItemService.isCartItemExist(loginUserDto.getMemberId(), cartItemId) == false)
-//            return ResponseEntity.badRequest().build();
-//        cartItemService.deleteCartItem(loginUserDto.getMemberId(), cartItemId);
-//        return ResponseEntity.ok().build();
-//    }
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity deleteCartItem(@IfLogin LoginUserDto loginUserDto, AddCartItemDto addCartItemDto){
+        if(cartItemService.isCartItemExist(loginUserDto.getMemberId(), addCartItemDto.getCartId()) == false)
+            return ResponseEntity.badRequest().build();
+        cartItemService.deleteCartItem(loginUserDto.getMemberId(), addCartItemDto.getCartId());
+        return ResponseEntity.ok().build();
+    }
 }
