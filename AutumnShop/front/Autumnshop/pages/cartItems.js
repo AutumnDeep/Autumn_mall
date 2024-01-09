@@ -142,14 +142,6 @@ const CartItems = () => {
                 <td>{item.productTitle}</td>
                 <td>{item.productPrice}</td>
                 <td>{item.productDescription}</td>
-                {/* <td>
-                  <input
-                    type="number"
-                    className={classes.quantityInput}
-                    value={updatedQuantity[index] || 0}
-                    onChange={(event) => QuantityChange(event, index)}
-                  />
-                </td> */}
                 <td>
                   <select
                     className={classes.quantityInput}
