@@ -65,8 +65,9 @@ public class CartItemService {
         return cartItemRepository.findByCart_memberId(memberId);
     }
 
-    //    @Transactional
-//    public void deleteCartItem(Long memberId, Long cartItemId) {
-//        cartItemRepository.deleteByCart_memberIdAndId(memberId, cartItemId);
-//    }
+    @Transactional
+    public void deleteCartItem(Long memberId, Long cartItemId) {
+        cartItemRepository.deleteByCart_memberIdAndId(memberId, cartItemId);
+    }
+
 }

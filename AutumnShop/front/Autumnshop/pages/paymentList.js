@@ -2,8 +2,6 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
-import Payment from "./Payment";
-import { ImportExport } from "@mui/icons-material";
 
 // CSS 모음
 const useStyles = makeStyles((theme) => ({
@@ -81,7 +79,7 @@ const paymentList = () => {
             <th>평점</th>
             <th>수량</th>
             <th>이미지</th>
-            <th>구매날짜</th>
+            <th>날짜</th>
           </tr>
         </thead>
         <tbody className="css">

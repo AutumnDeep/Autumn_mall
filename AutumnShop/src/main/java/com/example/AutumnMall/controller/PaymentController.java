@@ -22,7 +22,7 @@ public class PaymentController {
                                  @RequestBody AddPaymentDto addPaymentDto) {
         try {
             return paymentService.addPayment(loginUserDto.getMemberId(),
-                    addPaymentDto.getCartId());
+                    addPaymentDto.getCartId(), addPaymentDto.getQuantity());
 
         }catch(Exception ex){
             ex.printStackTrace();

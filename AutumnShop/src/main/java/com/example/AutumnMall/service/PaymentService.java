@@ -22,40 +22,48 @@ public class PaymentService {
     private final ProductRepository productRepository;
 
     @Transactional
-    public List<Payment> addPayment(Long memberId, Long cartId){
-        List<CartItem> cartItems = cartItemRepository.findByCart_IdAndCart_MemberId(cartId, memberId);
-        List<Payment> payments = new ArrayList<>();
+    public List<Payment> addPayment(Long memberId, Long cartId, List<Integer> quantities){
+        try {
+            List<CartItem> cartItems = cartItemRepository.findByCart_IdAndCart_MemberId(cartId, memberId);
+            List<Payment> payments = new ArrayList<>();
 
-        LocalDate localDate = LocalDate.now();
-        localDate.getYear();
-        localDate.getDayOfMonth();
-        localDate.getMonthValue();
-        String date = String.valueOf(localDate.getYear()) + (localDate.getMonthValue() < 10 ? "0" :"") + String.valueOf(localDate.getMonthValue()) + (localDate.getDayOfMonth() < 10 ? "0" :"") +String.valueOf(localDate.getDayOfMonth());
+            LocalDate localDate = LocalDate.now();
+            localDate.getYear();
+            localDate.getDayOfMonth();
+            localDate.getMonthValue();
+            String date = String.valueOf(localDate.getYear()) + (localDate.getMonthValue() < 10 ? "0" : "") + String.valueOf(localDate.getMonthValue()) + (localDate.getDayOfMonth() < 10 ? "0" : "") + String.valueOf(localDate.getDayOfMonth());
 
-        Iterator<CartItem> iterator = cartItems.iterator();
-        while(iterator.hasNext()){
-            CartItem cartItem = iterator.next();
+            Iterator<CartItem> iterator = cartItems.iterator();
+            Iterator<Integer> quantityIterator = quantities.iterator();
+            while (iterator.hasNext()) {
+                CartItem cartItem = iterator.next();
+                int quantity = quantityIterator.next();
 
-            Optional<Product> product = productRepository.findById(cartItem.getProductId());
-            Product productItem = product.get();
-
-
-            Payment userPayment = new Payment();
-            userPayment.setImageUrl(productItem.getImageUrl());
-            userPayment.setProductId(cartItem.getProductId());
-            userPayment.setProductPrice(cartItem.getProductPrice());
-            userPayment.setProductTitle(cartItem.getProductTitle());
-            userPayment.setProductRate(productItem.getRating().getRate());
-            userPayment.setQuantity(cartItem.getQuantity());
-            userPayment.setMemberId(memberId);
-            userPayment.setDate(date);
+                Optional<Product> product = productRepository.findById(cartItem.getProductId());
+                Product productItem = product.get();
 
 
-            payments.add(paymentRepository.save(userPayment));
-            cartItemRepository.deleteByCart_memberId(memberId);
+                Payment userPayment = new Payment();
+                userPayment.setImageUrl(productItem.getImageUrl());
+                userPayment.setProductId(cartItem.getProductId());
+                userPayment.setProductPrice(cartItem.getProductPrice());
+                userPayment.setProductTitle(cartItem.getProductTitle());
+                userPayment.setProductRate(productItem.getRating().getRate());
+                userPayment.setQuantity(quantity);
+                userPayment.setMemberId(memberId);
+                userPayment.setDate(date);
+
+
+                payments.add(paymentRepository.save(userPayment));
+                cartItemRepository.deleteByCart_memberId(memberId);
+            }
+
+            return payments;
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return null;
         }
-
-        return payments;
     }
 
     @Transactional
