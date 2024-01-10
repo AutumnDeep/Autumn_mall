@@ -52,7 +52,7 @@ public class CartItemService {
 
     @Transactional(readOnly = true)
     public boolean isCartItemExist(Long memberId, Long cartItemId) {
-        return cartItemRepository.existsByCart_memberIdAndId(memberId, cartItemId);
+        return cartItemRepository.existsByCart_memberIdAndCartId(memberId, cartItemId);
     }
 
     @Transactional(readOnly = true)
@@ -66,8 +66,13 @@ public class CartItemService {
     }
 
     @Transactional
-    public void deleteCartItem(Long memberId, Long cartItemId) {
-        cartItemRepository.deleteByCart_memberIdAndId(memberId, cartItemId);
+    public void deleteCartItem(Long cartItemId) {
+        cartItemRepository.deleteByCartId(cartItemId);
+    }
+
+    @Transactional
+    public void deleteCartItem(Long cartItemId, Long Id){
+        cartItemRepository.deleteByCartIdAndId(cartItemId, Id);
     }
 
 }
