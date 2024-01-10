@@ -2,6 +2,7 @@ package com.example.AutumnMall.controller;
 
 import com.example.AutumnMall.domain.CartItem;
 import com.example.AutumnMall.dto.AddCartItemDto;
+import com.example.AutumnMall.dto.DeleteCartItemDto;
 import com.example.AutumnMall.security.jwt.util.IfLogin;
 import com.example.AutumnMall.security.jwt.util.LoginUserDto;
 import com.example.AutumnMall.service.CartItemService;
@@ -43,10 +44,26 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity deleteCartItem(@IfLogin LoginUserDto loginUserDto, AddCartItemDto addCartItemDto){
-        if(cartItemService.isCartItemExist(loginUserDto.getMemberId(), addCartItemDto.getCartId()) == false)
+    public ResponseEntity deleteCartItem(@IfLogin LoginUserDto loginUserDto, @PathVariable Long cartItemId,
+        @RequestParam(required = false) Long id){
+        if(cartItemService.isCartItemExist(loginUserDto.getMemberId(), cartItemId) == false)
             return ResponseEntity.badRequest().build();
-        cartItemService.deleteCartItem(loginUserDto.getMemberId(), addCartItemDto.getCartId());
-        return ResponseEntity.ok().build();
+        else {
+            if (id == null)
+                cartItemService.deleteCartItem(cartItemId);
+            else {
+                cartItemService.deleteCartItem(cartItemId, id);
+            }
+            return ResponseEntity.ok().build();
+        }
     }
+//    @DeleteMapping("/{cartItemId}")
+//    public ResponseEntity deleteCartItem(@IfLogin LoginUserDto loginUserDto, @PathVariable Long cartItemId,
+//                                         @RequestBody AddCartItemDto addCartItemDto){
+//        if(cartItemService.isCartItemExist(loginUserDto.getMemberId(), cartItemId) == false)
+//            return ResponseEntity.badRequest().build();
+//        cartItemService.deleteCartItem(cartItemId, addCartItemDto.getProductId());
+//        return ResponseEntity.ok().build();
+//    }
+
 }
