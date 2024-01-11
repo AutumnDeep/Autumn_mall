@@ -2,7 +2,6 @@ package com.example.AutumnMall.controller;
 
 import com.example.AutumnMall.domain.CartItem;
 import com.example.AutumnMall.dto.AddCartItemDto;
-import com.example.AutumnMall.dto.DeleteCartItemDto;
 import com.example.AutumnMall.security.jwt.util.IfLogin;
 import com.example.AutumnMall.security.jwt.util.LoginUserDto;
 import com.example.AutumnMall.service.CartItemService;
