@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "payment")
@@ -23,7 +24,7 @@ public class Payment {
     private int quantity;
 
     private Long memberId;
-    private String date;
+    private LocalDate date;
 
 
 

@@ -64,14 +64,14 @@ const DesktopAppBar = () => {
             카트목록
           </Button>
         </Link>
-        <Link href="/paymentList" passHref>
+        <a href="/paymentList" onClick={() => window.location.reload()}>
           <Button
             color="inherit"
             style={{ display: isLoggedIn ? "block" : "none" }}
           >
             구매목록
           </Button>
-        </Link>
+        </a>
         <Link href="/mypage" passHref>
           <Button
             color="inherit"

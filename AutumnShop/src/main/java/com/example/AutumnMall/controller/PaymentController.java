@@ -30,9 +30,15 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/{id}")
-    public List<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
-                                        @PathVariable Long id){
+    @GetMapping
+    public List<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto){
             return paymentService.getPayment(loginUserDto.getMemberId());
+    }
+
+    @GetMapping("/{year}/{month}")
+    public List<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
+                                        @PathVariable(required = false) Integer year,
+                                        @PathVariable(required = false) Integer month) {
+        return paymentService.getPaymentDate(loginUserDto.getMemberId(), year, month);
     }
 }

@@ -31,7 +31,6 @@ public class PaymentService {
             localDate.getYear();
             localDate.getDayOfMonth();
             localDate.getMonthValue();
-            String date = String.valueOf(localDate.getYear()) + (localDate.getMonthValue() < 10 ? "0" : "") + String.valueOf(localDate.getMonthValue()) + (localDate.getDayOfMonth() < 10 ? "0" : "") + String.valueOf(localDate.getDayOfMonth());
 
             Iterator<CartItem> iterator = cartItems.iterator();
             Iterator<Integer> quantityIterator = quantities.iterator();
@@ -51,7 +50,7 @@ public class PaymentService {
                 userPayment.setProductRate(productItem.getRating().getRate());
                 userPayment.setQuantity(quantity);
                 userPayment.setMemberId(memberId);
-                userPayment.setDate(date);
+                userPayment.setDate(localDate);
 
 
                 payments.add(paymentRepository.save(userPayment));
@@ -66,6 +65,13 @@ public class PaymentService {
         }
     }
 
+    @Transactional
+    public List<Payment> getPaymentDate(Long memberId, int year, int month){
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+        return paymentRepository.findByMemberIdAndDateBetween(memberId, startDate, endDate);
+    }
     @Transactional
     public List<Payment> getPayment(Long memberId){
         return paymentRepository.findByMemberId(memberId);
