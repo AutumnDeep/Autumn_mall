@@ -5,6 +5,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { lighten } from "@mui/system";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -24,6 +25,16 @@ const useStyles = makeStyles((theme) => ({
   },
   backButton: {
     alignSelf: "flex-start",
+  },
+  linkButton: {
+    "&:hover": {
+      backgroundColor: "transparent", // 마우스 오버 시 배경색을 투명으로 설정
+      color: lighten(theme.palette.primary.main, 0.2),
+    },
+    "&:active":{
+      backgroundColor: "transparent",
+    //  color: "red",
+    },
   },
 }));
 
@@ -58,6 +69,7 @@ const Login = () => {
       setErrorMessage("이메일이나 암호가 틀렸습니다.");
     }
   };
+  
 
   return (
     <Container maxWidth="sm" className={classes.container} component="main">
@@ -71,6 +83,7 @@ const Login = () => {
           type="email"
           variant="outlined"
           margin="normal"
+          style={{ marginBottom: '0.5px' }}  // 원하는 여백 크기를 직접 지정
           fullWidth
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -79,7 +92,8 @@ const Login = () => {
           label="비밀번호"
           type="password"
           variant="outlined"
-          margin="normal"
+          margin="dense"
+          style={{ marginBottom: '0.5px' }}  // 원하는 여백 크기를 직접 지정
           fullWidth
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -89,22 +103,30 @@ const Login = () => {
             {errorMessage}
           </Typography>
         )}
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          size="large"
-          fullWidth
-        >
-          로그인
-        </Button>
+        
+        <div style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>  {/* 수동으로 간격 조절 */}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+            fullWidth
+          >
+            로그인
+          </Button>
+        </div>
 
-        <Link href="/joinform" passHref>
-          <Button color="inherit">회원가입</Button>
-        </Link>
-        <Link href="/findpassword" passHref>
-          <Button color="inherit">암호를 잊었어요.</Button>
-        </Link>
+        <Box display="flex" justifyContent="flex-end">
+          <Link href="/findpassword" passHref>
+            <Button className={classes.linkButton} color="inherit">비밀번호 찾기</Button>
+          </Link>
+          <Typography variant="body2" color="textSecondary" style={{ margin: '7px' }}>
+            |
+          </Typography>
+          <Link href="/joinform" passHref>
+            <Button className={classes.linkButton} color="inherit">회원가입</Button>
+          </Link>
+        </Box>
       </Box>
     </Container>
   );
