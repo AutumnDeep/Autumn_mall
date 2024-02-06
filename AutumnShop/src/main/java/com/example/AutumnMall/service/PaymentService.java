@@ -5,6 +5,8 @@ import com.example.AutumnMall.repository.CartItemRepository;
 import com.example.AutumnMall.repository.PaymentRepository;
 import com.example.AutumnMall.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +77,11 @@ public class PaymentService {
     @Transactional
     public List<Payment> getPayment(Long memberId){
         return paymentRepository.findByMemberId(memberId);
+    }
+
+    @Transactional
+    public Page<Payment> getPaymentPage(Long memberId, int page, int size){
+        return paymentRepository.findAllByMemberId(memberId, PageRequest.of(page, size));
     }
 
 }

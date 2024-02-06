@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
 import PaymentDate from "./paymentDate";
+import { Button, Box } from "@mui/material";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 // CSS 모음
 const useStyles = makeStyles((theme) => ({
@@ -70,19 +72,29 @@ async function getCartItem(loginInfo, setPaymentItems) {
 }
 
 const paymentList = () => {
+  const categoryId = 0;
+  const pageNumber = 0;
+  const totalPages = 0;
   const classes = useStyles();
   const [paymentItems, setPaymentItems] = useState([]);
-  let totalPrice = 0;
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
     getCartItem(loginInfo, setPaymentItems);
   }, []);
 
-  // 카트에 저장된 아이템들의 총 가격
-  paymentItems.forEach((item) => {
-    totalPrice += item.productPrice;
-  });
+  // Page로 아이템을 불러오면서, 초기 렌더링 오류로 인해 && 연산자를 사용하여 문제 해결
+  useEffect(() => {
+    let itemTotalPrice = 0;
+    if (paymentItems && paymentItems.content) {
+      paymentItems.content.forEach((item) => {
+        itemTotalPrice += item.productPrice;
+      });
+    }
+    setTotalPrice(itemTotalPrice);
+  }, [paymentItems]);
+
   return (
     <div>
       <PaymentDate classes={classes} />
@@ -101,31 +113,80 @@ const paymentList = () => {
             </tr>
           </thead>
           <tbody className="css">
-            {paymentItems.map((item, index) => (
-              <tr key={item.id} className={classes.cartItem}>
-                <td>{index + 1}</td>
-                <td>{item.productTitle}</td>
-                <td>{item.productPrice}</td>
-                <td>{item.productRate}</td>
-                <td>{item.quantity}</td>
-                <td>
-                  {item.imageUrl && (
-                    <img
-                      src={item.imageUrl}
-                      alt={`Product ${index + 1}`}
-                      className={classes.productImage}
-                    />
-                  )}
-                </td>
-                <td>{item.date}</td>
-              </tr>
-            ))}
+            {paymentItems.content &&
+              paymentItems.content.map((item, index) => (
+                <tr key={item.id} className={classes.cartItem}>
+                  <td>{index + 1}</td>
+                  <td>{item.productTitle}</td>
+                  <td>{item.productPrice}</td>
+                  <td>{item.productRate}</td>
+                  <td>{item.quantity}</td>
+                  <td>
+                    {item.imageUrl && (
+                      <img
+                        src={item.imageUrl}
+                        alt={`Product ${index + 1}`}
+                        className={classes.productImage}
+                      />
+                    )}
+                  </td>
+                  <td>{item.date}</td>
+                </tr>
+              ))}
             <tr>
               <td>총 가격 : {totalPrice}</td>
             </tr>
           </tbody>
         </table>
       </div>
+      <Box display="flex" justifyContent="center" marginBottom={3}>
+        {/* 페이지 네비게이터 버튼 */}
+        <Link
+          href={`/products?page=0${
+            categoryId ? `&categoryId=${categoryId}` : ""
+          }`}
+          passHref
+        >
+          <Button variant="outlined">첫페이지</Button>
+        </Link>
+        <Link
+          href={`/products?page=${Math.max(0, pageNumber - 1)}${
+            categoryId ? `&categoryId=${categoryId}` : ""
+          }`}
+          passHref
+        >
+          <Button variant="outlined">이전</Button>
+        </Link>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <Link
+            href={`/products?page=${i}${
+              categoryId ? `&categoryId=${categoryId}` : ""
+            }`}
+            passHref
+            key={i}
+          >
+            <Button variant="outlined" selected={i === pageNumber}>
+              {i + 1}
+            </Button>
+          </Link>
+        ))}
+        <Link
+          href={`/products?page=${Math.min(totalPages - 1, pageNumber + 1)}${
+            categoryId ? `&categoryId=${categoryId}` : ""
+          }`}
+          passHref
+        >
+          <Button variant="outlined">다음</Button>
+        </Link>
+        <Link
+          href={`/products?page=${totalPages - 1}${
+            categoryId ? `&categoryId=${categoryId}` : ""
+          }`}
+          passHref
+        >
+          <Button variant="outlined">마지막페이지</Button>
+        </Link>
+      </Box>
     </div>
   );
 };
