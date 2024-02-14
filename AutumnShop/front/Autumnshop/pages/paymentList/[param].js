@@ -165,7 +165,7 @@ const paymentList = () => {
               ? `/paymentList?year=${dateParams.year}&month=${
                   dateParams.month
                 }&pageNumber=${Math.max(0, pageNumber - 1)}`
-              : `/paymentList?page=${Math.max(0, pageNumber - 1)}`
+              : `/paymentList?pageNumber=${Math.max(0, pageNumber - 1)}`
           }
         >
           <Button variant="outlined">이전</Button>
