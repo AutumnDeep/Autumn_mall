@@ -6,6 +6,8 @@ import com.example.AutumnMall.security.jwt.util.IfLogin;
 import com.example.AutumnMall.security.jwt.util.LoginUserDto;
 import com.example.AutumnMall.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,14 +33,20 @@ public class PaymentController {
     }
 
     @GetMapping
-    public List<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto){
-            return paymentService.getPayment(loginUserDto.getMemberId());
+    public Page<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
+                                        @RequestParam(required = false, defaultValue = "0") int page){
+        int size = 10;
+        return paymentService.getPaymentPage(loginUserDto.getMemberId(), page, size);
+
     }
 
     @GetMapping("/{year}/{month}")
-    public List<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
+    public Page<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
                                         @PathVariable(required = false) Integer year,
-                                        @PathVariable(required = false) Integer month) {
-        return paymentService.getPaymentDate(loginUserDto.getMemberId(), year, month);
+                                        @PathVariable(required = false) Integer month,
+                                        @RequestParam(required = false, defaultValue = "0") int page) {
+        int size = 10;
+        return paymentService.getPaymentDate(loginUserDto.getMemberId(), year, month, page, size);
     }
+
 }

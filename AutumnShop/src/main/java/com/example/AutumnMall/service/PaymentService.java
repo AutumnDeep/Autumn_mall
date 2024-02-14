@@ -5,6 +5,8 @@ import com.example.AutumnMall.repository.CartItemRepository;
 import com.example.AutumnMall.repository.PaymentRepository;
 import com.example.AutumnMall.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,15 +68,20 @@ public class PaymentService {
     }
 
     @Transactional
-    public List<Payment> getPaymentDate(Long memberId, int year, int month){
+    public Page<Payment> getPaymentDate(Long memberId, int year, int month, int page, int size){
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
-        return paymentRepository.findByMemberIdAndDateBetween(memberId, startDate, endDate);
+        return paymentRepository.findByMemberIdAndDateBetween(memberId, startDate, endDate, PageRequest.of(page, size));
     }
     @Transactional
     public List<Payment> getPayment(Long memberId){
         return paymentRepository.findByMemberId(memberId);
+    }
+
+    @Transactional
+    public Page<Payment> getPaymentPage(Long memberId, int page, int size){
+        return paymentRepository.findAllByMemberId(memberId, PageRequest.of(page, size));
     }
 
 }
