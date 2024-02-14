@@ -42,16 +42,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function getCartItem(loginInfo, setPaymentItems) {
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const year = urlSearchParams.get("year");
-  const month = urlSearchParams.get("month");
-
+async function getCartItem(loginInfo, setPaymentItems, page, year, month) {
   if (year != null && month != null) {
     const paymentResponse = await axios
       .get(`http://localhost:8080/payment/${year}/${month}`, {
         headers: {
           Authorization: `Bearer ${loginInfo.accessToken}`,
+        },
+        params: {
+          page: page,
         },
       })
       .then((paymentResponse) => {
@@ -64,6 +63,9 @@ async function getCartItem(loginInfo, setPaymentItems) {
         headers: {
           Authorization: `Bearer ${loginInfo.accessToken}`,
         },
+        params: {
+          page: page,
+        },
       })
       .then((paymentResponse) => {
         setPaymentItems(paymentResponse.data);
@@ -72,16 +74,21 @@ async function getCartItem(loginInfo, setPaymentItems) {
 }
 
 const paymentList = () => {
-  const categoryId = 0;
-  const pageNumber = 0;
-  const totalPages = 0;
   const classes = useStyles();
   const [paymentItems, setPaymentItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [dateParams, setDateParams] = useState({ year: null, month: null });
 
   useEffect(() => {
     const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
-    getCartItem(loginInfo, setPaymentItems);
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const page = urlSearchParams.get("pageNumber");
+    const year = urlSearchParams.get("year");
+    const month = urlSearchParams.get("month");
+    setPageNumber(page != null ? page : 0);
+    setDateParams({ year: year, month: month });
+    getCartItem(loginInfo, setPaymentItems, page, year, month);
   }, []);
 
   // Page로 아이템을 불러오면서, 초기 렌더링 오류로 인해 && 연산자를 사용하여 문제 해결
@@ -94,6 +101,8 @@ const paymentList = () => {
     }
     setTotalPrice(itemTotalPrice);
   }, [paymentItems]);
+
+  const totalPages = paymentItems.totalPages;
 
   return (
     <div>
@@ -141,51 +150,65 @@ const paymentList = () => {
       </div>
       <Box display="flex" justifyContent="center" marginBottom={3}>
         {/* 페이지 네비게이터 버튼 */}
-        <Link
-          href={`/products?page=0${
-            categoryId ? `&categoryId=${categoryId}` : ""
-          }`}
-          passHref
+        <a
+          href={
+            dateParams.year && dateParams.month
+              ? `/paymentList?year=${dateParams.year}&month=${dateParams.month}&pageNumber=0`
+              : `/paymentList?pageNumber=0`
+          }
         >
           <Button variant="outlined">첫페이지</Button>
-        </Link>
-        <Link
-          href={`/products?page=${Math.max(0, pageNumber - 1)}${
-            categoryId ? `&categoryId=${categoryId}` : ""
-          }`}
-          passHref
+        </a>
+        <a
+          href={
+            dateParams.year && dateParams.month
+              ? `/paymentList?year=${dateParams.year}&month=${
+                  dateParams.month
+                }&pageNumber=${Math.max(0, pageNumber - 1)}`
+              : `/paymentList?page=${Math.max(0, pageNumber - 1)}`
+          }
         >
           <Button variant="outlined">이전</Button>
-        </Link>
+        </a>
         {Array.from({ length: totalPages }, (_, i) => (
-          <Link
-            href={`/products?page=${i}${
-              categoryId ? `&categoryId=${categoryId}` : ""
-            }`}
-            passHref
+          <a
+            href={
+              dateParams.year && dateParams.month
+                ? `/paymentList?year=${dateParams.year}&month=${dateParams.month}&pageNumber=${i}`
+                : `/paymentList?pageNumber=${i}`
+            }
             key={i}
           >
             <Button variant="outlined" selected={i === pageNumber}>
               {i + 1}
             </Button>
-          </Link>
+          </a>
         ))}
-        <Link
-          href={`/products?page=${Math.min(totalPages - 1, pageNumber + 1)}${
-            categoryId ? `&categoryId=${categoryId}` : ""
-          }`}
-          passHref
+        <a
+          href={
+            dateParams.year && dateParams.month
+              ? `/paymentList?year=${dateParams.year}&month=${
+                  dateParams.month
+                }&pageNumber=${Math.min(totalPages - 1, pageNumber + 1)}`
+              : `/paymentList?pageNumber=${Math.min(
+                  totalPages - 1,
+                  pageNumber + 1
+                )}`
+          }
         >
           <Button variant="outlined">다음</Button>
-        </Link>
-        <Link
-          href={`/products?page=${totalPages - 1}${
-            categoryId ? `&categoryId=${categoryId}` : ""
-          }`}
-          passHref
+        </a>
+        <a
+          href={
+            dateParams.year && dateParams.month
+              ? `/paymentList?year=${dateParams.year}&month=${
+                  dateParams.month
+                }&pageNumber=${totalPages - 1}`
+              : `/paymentList?pageNumber=${totalPages - 1}`
+          }
         >
           <Button variant="outlined">마지막페이지</Button>
-        </Link>
+        </a>
       </Box>
     </div>
   );

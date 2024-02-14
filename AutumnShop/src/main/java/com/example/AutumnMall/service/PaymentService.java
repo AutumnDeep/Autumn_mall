@@ -68,11 +68,11 @@ public class PaymentService {
     }
 
     @Transactional
-    public List<Payment> getPaymentDate(Long memberId, int year, int month){
+    public Page<Payment> getPaymentDate(Long memberId, int year, int month, int page, int size){
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
-        return paymentRepository.findByMemberIdAndDateBetween(memberId, startDate, endDate);
+        return paymentRepository.findByMemberIdAndDateBetween(memberId, startDate, endDate, PageRequest.of(page, size));
     }
     @Transactional
     public List<Payment> getPayment(Long memberId){

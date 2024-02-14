@@ -11,7 +11,7 @@ import java.util.List;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByMemberId(Long memberId);
 
-    List<Payment> findByMemberIdAndDateBetween(Long memberId, LocalDate startDate, LocalDate endDate);
+    Page<Payment> findByMemberIdAndDateBetween(Long memberId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     Page<Payment> findAllByMemberId(Long memberId, Pageable pageable);
 }

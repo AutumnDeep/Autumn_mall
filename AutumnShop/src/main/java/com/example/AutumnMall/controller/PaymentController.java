@@ -32,12 +32,6 @@ public class PaymentController {
         }
     }
 
-//    @GetMapping
-//    public List<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto){
-//                return paymentService.getPayment(loginUserDto.getMemberId());
-//
-//    }
-
     @GetMapping
     public Page<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
                                         @RequestParam(required = false, defaultValue = "0") int page){
@@ -47,11 +41,12 @@ public class PaymentController {
     }
 
     @GetMapping("/{year}/{month}")
-    public List<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
+    public Page<Payment> paymentListGet(@IfLogin LoginUserDto loginUserDto,
                                         @PathVariable(required = false) Integer year,
                                         @PathVariable(required = false) Integer month,
                                         @RequestParam(required = false, defaultValue = "0") int page) {
-        return paymentService.getPaymentDate(loginUserDto.getMemberId(), year, month);
+        int size = 10;
+        return paymentService.getPaymentDate(loginUserDto.getMemberId(), year, month, page, size);
     }
 
 }

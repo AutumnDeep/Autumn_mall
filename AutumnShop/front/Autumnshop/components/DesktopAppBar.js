@@ -68,6 +68,7 @@ const DesktopAppBar = () => {
           <Button
             color="inherit"
             style={{ display: isLoggedIn ? "block" : "none" }}
+            page={0}
           >
             구매목록
           </Button>
