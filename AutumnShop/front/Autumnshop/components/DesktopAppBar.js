@@ -53,6 +53,14 @@ const DesktopAppBar = () => {
           </Typography>
         </Link>
         <div style={{ flexGrow: 1 }} />
+        <Link href="/order" passHref>
+          <Button
+            color="inherit"
+            style={{ display: isLoggedIn ? "block" : "none" }}
+          >
+            주문내역
+          </Button>
+        </Link>
         <Link href="/products" passHref>
           <Button color="inherit">상품목록</Button>
         </Link>
@@ -64,15 +72,14 @@ const DesktopAppBar = () => {
             카트목록
           </Button>
         </Link>
-        <a href="/paymentList" onClick={() => window.location.reload()}>
+        <Link href="/paymentList" passHref>
           <Button
             color="inherit"
             style={{ display: isLoggedIn ? "block" : "none" }}
-            page={0}
           >
             구매목록
           </Button>
-        </a>
+        </Link>
         <Link href="/mypage" passHref>
           <Button
             color="inherit"
