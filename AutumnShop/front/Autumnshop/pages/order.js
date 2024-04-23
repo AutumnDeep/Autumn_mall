@@ -10,7 +10,9 @@ function OrderDetails({ orderId }) {
   const [order, setOrder] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+  const [orderid, setOrderid] = useState([]);
+  const [payment, setPayment] = useState([]);
+
   useEffect(() => {
     const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
     // 백엔드에서 주문 상세 정보를 가져옴
@@ -22,16 +24,26 @@ function OrderDetails({ orderId }) {
       },
     })
     .then((orderresponse) => {
-      console.log(orderresponse)
       setOrder(orderresponse.data)
       setLoading(false)
+      setOrderid(orderresponse.data.map(order => order.id));
     });
     }
-
     fetchOrderDetails();
-  }, [orderId]);
+  }, []);
 
-  console.log(order);
+  useEffect(() => {
+    async function fetchOrderFollow() {
+    const payment = await Promise.all(
+      orderid.map(orderids => axios.get("http://localhost:8080/payment/order", {
+        params: { orderId : orderids }
+    }).then(response => response.data) 
+    .catch(error => console.error("Error fetching order data:", error))
+  ))
+  console.log(payment)
+}
+    fetchOrderFollow()
+  });
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

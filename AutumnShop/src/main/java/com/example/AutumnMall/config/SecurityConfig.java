@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeRequests(authorizeRequests -> {
                     authorizeRequests
-                            .antMatchers("/members/signup", "/members/login", "/members/refreshToken", "/carts", "/cartItems", "/payments", "/orders").permitAll()
+                            .antMatchers("/members/signup", "/members/login", "/members/refreshToken", "/carts", "/cartItems", "/payments", "/orders", "/payment/order").permitAll()
                             .antMatchers(HttpMethod.GET, "/categories/**", "/products/**").permitAll()
                             .antMatchers(HttpMethod.POST, "/payments/**").permitAll()
                             .antMatchers(HttpMethod.GET, "/**").hasAnyRole("USER")

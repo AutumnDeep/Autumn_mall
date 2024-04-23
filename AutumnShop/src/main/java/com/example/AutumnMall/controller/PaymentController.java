@@ -6,7 +6,6 @@ import com.example.AutumnMall.security.jwt.util.IfLogin;
 import com.example.AutumnMall.security.jwt.util.LoginUserDto;
 import com.example.AutumnMall.service.PaymentService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,7 @@ public class PaymentController {
                                  @RequestBody AddPaymentDto addPaymentDto) {
         try {
             return paymentService.addPayment(loginUserDto.getMemberId(),
-                    addPaymentDto.getCartId(), addPaymentDto.getQuantity());
+                    addPaymentDto.getCartId(), addPaymentDto.getOrderId(), addPaymentDto.getQuantity());
 
         }catch(Exception ex){
             ex.printStackTrace();
@@ -47,6 +46,11 @@ public class PaymentController {
                                         @RequestParam(required = false, defaultValue = "0") int page) {
         int size = 10;
         return paymentService.getPaymentDate(loginUserDto.getMemberId(), year, month, page, size);
+    }
+
+    @GetMapping("/order")
+    public List<Payment> getPaymentByOrder(@RequestParam(required = false, defaultValue = "150") Long orderId) {
+        return paymentService.getOrderPayment(orderId);
     }
 
 }

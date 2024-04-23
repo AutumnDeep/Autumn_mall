@@ -1,12 +1,11 @@
 package com.example.AutumnMall.controller;
 import com.example.AutumnMall.domain.Order;
+import com.example.AutumnMall.dto.AddOrderDto;
 import com.example.AutumnMall.security.jwt.util.IfLogin;
 import com.example.AutumnMall.security.jwt.util.LoginUserDto;
 import com.example.AutumnMall.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +16,10 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @PostMapping
+    public Order addorder(@IfLogin @RequestBody AddOrderDto addOrderDto) {
+        return orderService.addorder(addOrderDto.getMemberId());
+    }
     @GetMapping
     public List<Order> getOrderById(@IfLogin LoginUserDto loginUserDto) { // 로그인을 해야 사용할 수 있도록 변경
         List<Order> order = orderService.findByMemberId(loginUserDto.getMemberId());

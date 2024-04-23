@@ -1,9 +1,7 @@
 package com.example.AutumnMall.service;
 
 import com.example.AutumnMall.domain.*;
-import com.example.AutumnMall.repository.CartItemRepository;
-import com.example.AutumnMall.repository.PaymentRepository;
-import com.example.AutumnMall.repository.ProductRepository;
+import com.example.AutumnMall.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,11 +20,14 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
     @Transactional
-    public List<Payment> addPayment(Long memberId, Long cartId, List<Integer> quantities){
+    public List<Payment> addPayment(Long memberId, Long cartId, Long OrderId, List<Integer> quantities){
         try {
             List<CartItem> cartItems = cartItemRepository.findByCart_IdAndCart_MemberId(cartId, memberId);
+            Order order = orderRepository.findById(OrderId)
+                    .orElseThrow(() -> new RuntimeException("Member not found with id: " + OrderId));
             List<Payment> payments = new ArrayList<>();
 
             LocalDate localDate = LocalDate.now();
@@ -39,6 +40,7 @@ public class PaymentService {
             while (iterator.hasNext()) {
                 CartItem cartItem = iterator.next();
                 int quantity = quantityIterator.next();
+
 
                 Optional<Product> product = productRepository.findById(cartItem.getProductId());
                 Product productItem = product.get();
@@ -53,7 +55,7 @@ public class PaymentService {
                 userPayment.setQuantity(quantity);
                 userPayment.setMemberId(memberId);
                 userPayment.setDate(localDate);
-
+                userPayment.setOrder(order);
 
                 payments.add(paymentRepository.save(userPayment));
                 cartItemRepository.deleteByCart_memberId(memberId);
@@ -82,6 +84,13 @@ public class PaymentService {
     @Transactional
     public Page<Payment> getPaymentPage(Long memberId, int page, int size){
         return paymentRepository.findAllByMemberId(memberId, PageRequest.of(page, size));
+    }
+
+    @Transactional
+    public List<Payment> getOrderPayment(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Member not found with id: " + orderId));
+        return paymentRepository.findByOrderId(order.getId());
     }
 
 }
