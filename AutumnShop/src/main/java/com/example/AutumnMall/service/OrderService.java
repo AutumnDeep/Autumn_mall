@@ -32,8 +32,7 @@ public class OrderService {
         order.setOrderDate(localDate);
         order.setStatus(OrderStatus.ORDERED);
 
-        Order saveOrder = orderRepository.save(order);
-        return saveOrder;
+        return orderRepository.save(order);
     }
 
        public List<Order> findByMemberId(Long memberId) {
