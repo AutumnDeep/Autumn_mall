@@ -1,5 +1,4 @@
 import React from "react";
-import { Container, Box, Typography, TextField, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Link from "next/link";
 import axios from "axios";
@@ -8,8 +7,9 @@ import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme) => ({
   cartContainer: {
-    width: "800px",
-    margin: "20px",
+    width: "100%",
+    maxWidth: "800px",
+    margin: "20px auto",
     padding: "20px",
     border: "1px solid #ccc",
     borderRadius: "8px",
@@ -34,13 +34,48 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     textAlign: "center",
   },
+  
   productImage: {
     width: "100px",
     alignSelf: "center",
   },
+  
+  headerRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "10px",
+    margin: "0 0 10px 0",
+    border: "1px solid #007bff",
+    borderRadius: "12px",
+    backgroundColor: "#007bff",
+    color: "white",
+    fontWeight: "bold",
+  },
+
+  detailRow: {
+    flexDirection: "column",  // 변경: 세로로 나열되도록 수정
+    padding: "8px",
+    margin: "5px 0",
+    border: "1px solid #eee",
+    borderRadius: "8px",
+    backgroundColor: "#fafafa",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+  },
+
+  productDetailContainer: {
+    display: "flex",
+    justifyContent: "space-between",  // 각 요소를 좌우에 고르게 분포
+    alignItems: "center",
+    marginBottom: "5px",
+  },
+
+  productCell: {
+    padding: "5px 10px",
+    flex: 1, // ensures that each cell can grow equally
+  }
 }));
 
-function OrderDetails({ orderId }) {
+function OrderDetails({ }) {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -88,40 +123,37 @@ function OrderDetails({ orderId }) {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      {payment ? (
-        payment.map((paymentitem, index) => (
-          <div key={index}>
-            <p>주문 ID: {index+1}</p>
-            {paymentitem ? (
-              paymentitem.map((item, index) => (
-                <table key = {index}>
-                  <thead></thead>
-                  <tbody>
-                  <tr>
-                  <td>{item.productTitle}</td>
-                  <td>{item.productPrice}</td>
-                  <td>{item.productRate}</td>
-                  <td>{item.quantity}</td>
-                  <td>
-                    {item.imageUrl && (
-                      <img
-                        src={item.imageUrl}
-                        alt={`Product ${index + 1}`}
-                        className={classes.productImage}
-                      />
-                    )}
-                  </td>
-                  <td>{item.date}</td>
-                  </tr>
-                  </tbody>
-                </table>
-              ))
-            ): (<p></p>)}
-          </div>
-
-        ))
-      ):(<p></p>)}
+    <div className={classes.cartContainer}>
+      <div className={classes.headerRow}>
+        <div>주문번호</div>
+        <div>물품</div>
+        <div>가격</div>
+        <div>평점</div>
+        <div>수량</div>
+        <div>주문날짜</div>
+        <div>이미지</div>
+      </div>
+      {payment && payment.map((paymentitem, index) => (
+        <div key={index} className={classes.detailRow}>
+          {paymentitem.map((item, idx) => (
+            <div key={idx} className={classes.productDetailContainer}>
+              <span className={classes.productCell}>{index + 1}</span>
+              <span className={classes.productCell}>{item.productTitle}</span>
+              <span className={classes.productCell}>{item.productPrice}</span>
+              <span className={classes.productCell}>{item.productRate}</span>
+              <span className={classes.productCell}>{item.quantity}</span>
+              <span className={classes.productCell}>{item.date}</span>
+              {item.imageUrl && (
+                <img
+                  src={item.imageUrl}
+                  alt={`Product ${idx + 1}`}
+                  className={classes.productImage}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
