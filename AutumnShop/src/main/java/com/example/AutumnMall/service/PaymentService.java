@@ -2,6 +2,7 @@ package com.example.AutumnMall.service;
 
 import com.example.AutumnMall.domain.*;
 import com.example.AutumnMall.repository.CartItemRepository;
+import com.example.AutumnMall.repository.OrderRepository;
 import com.example.AutumnMall.repository.PaymentRepository;
 import com.example.AutumnMall.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +23,15 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+
 
     @Transactional
-    public List<Payment> addPayment(Long memberId, Long cartId, List<Integer> quantities){
+    public List<Payment> addPayment(Long memberId, Long cartId, Long orderId, List<Integer> quantities){
         try {
             List<CartItem> cartItems = cartItemRepository.findByCart_IdAndCart_MemberId(cartId, memberId);
+            Order order = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new RuntimeException("Member not found with id: " + orderId));
             List<Payment> payments = new ArrayList<>();
 
             LocalDate localDate = LocalDate.now();
@@ -53,6 +58,7 @@ public class PaymentService {
                 userPayment.setQuantity(quantity);
                 userPayment.setMemberId(memberId);
                 userPayment.setDate(localDate);
+                userPayment.setOrder(order);
 
 
                 payments.add(paymentRepository.save(userPayment));
@@ -82,6 +88,13 @@ public class PaymentService {
     @Transactional
     public Page<Payment> getPaymentPage(Long memberId, int page, int size){
         return paymentRepository.findAllByMemberId(memberId, PageRequest.of(page, size));
+    }
+
+    @Transactional
+    public List<Payment> getOrderPayment(Long orderId){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Member not found with id: " + orderId));
+        return paymentRepository.findByOrderId(order.getId());
     }
 
 }

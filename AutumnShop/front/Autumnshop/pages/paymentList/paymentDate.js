@@ -22,7 +22,7 @@ const paymentDate = (classes) => {
         name="paymentYear"
         onChange={(event) => handleChange(event, setSelectedYear)}
       >
-        {[2024, 2023, 2022, 2021, 2020].map((value) => (
+        {[2025, 2024, 2023, 2022, 2021, 2020].map((value) => (
           <option key={value} value={value}>
             {value}
           </option>

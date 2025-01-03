@@ -1,16 +1,24 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 
 const Payment = ({ cartId, quantity }) => {
   const paymentSubmit = async () => {
     const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
     try {
+      const orderResponse = await axios.post(
+        "http://localhost:8080/orders",
+        {
+          memberId : loginInfo.memberId
+        }
+      );
+
       const paymentResponse = await axios.post(
         "http://localhost:8080/payment",
         {
           cartId: cartId,
           quantity: quantity,
+          orderId : orderResponse.data.id,
         },
         {
           headers: {

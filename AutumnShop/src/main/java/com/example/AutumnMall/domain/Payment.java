@@ -26,6 +26,10 @@ public class Payment {
     private Long memberId;
     private LocalDate date;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
 
 
 }

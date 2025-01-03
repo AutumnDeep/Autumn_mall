@@ -24,7 +24,7 @@ public class PaymentController {
                                  @RequestBody AddPaymentDto addPaymentDto) {
         try {
             return paymentService.addPayment(loginUserDto.getMemberId(),
-                    addPaymentDto.getCartId(), addPaymentDto.getQuantity());
+                    addPaymentDto.getCartId(), addPaymentDto.getOrderId(), addPaymentDto.getQuantity());
 
         }catch(Exception ex){
             ex.printStackTrace();
@@ -47,6 +47,11 @@ public class PaymentController {
                                         @RequestParam(required = false, defaultValue = "0") int page) {
         int size = 10;
         return paymentService.getPaymentDate(loginUserDto.getMemberId(), year, month, page, size);
+    }
+
+    @GetMapping("/order")
+    public List<Payment> getPaymentOrder(@RequestParam(required = false, defaultValue = "150") Long orderId){
+        return paymentService.getOrderPayment(orderId);
     }
 
 }
